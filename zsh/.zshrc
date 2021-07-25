@@ -1,59 +1,14 @@
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
 ZSH_THEME="eastwood"
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+plugins=(git vagrant docker)
 
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git vagrant)
 
 # User configuration
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/mysql/bin:/opt/X11/bin:/usr/texbin"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -62,48 +17,83 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 export EDITOR='vim'
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
 #
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+# gpu switch
+# sudo pmset -a gpuswitch x
+# x = 0 = integrated
+# x = 1 = discrete
+# x = 2 = autoswitch
 
-case `hostname` in
-  (apollo) echo "on apollo"
-    export PROMPT='$(git_custom_status)%{$fg[cyan]%}[%~% ]%{$reset_color%}%B$%b ';;
+# stop brew autoupdating
+export HOMEBREW_NO_AUTO_UPDATE=1 
 
-  (vagrant-ubuntu-trusty-64) echo "on vagrant"
-    export PROMPT='$FG[005][%M]$(git_custom_status)%{$fg[cyan]%}[%~% ]%{$reset_color%}%B$%b ';;
+# geos
+export GEOS_DIR=/usr/local/Cellar/geos/3.7.1_1/
 
-  (*) echo 'must be a new machine'
-    export PROMPT='$FG[005][%M]$(git_custom_status)%{$fg[cyan]%}[%~% ]%{$reset_color%}%B$%b ';;
-esac
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/poppy/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/poppy/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
-# start z.sh
-. ~/.z.sh
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/poppy/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/poppy/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
-# fixed perl locales issue on vagrant
-if [ `hostname` '==' 'vagrant-ubuntu-trusty-64' ]; then
-  export LC_ALL="en_US.UTF-8"
-fi
+#alias android='/Users/poppy/Library/Android/sdk/emulator/emulator'
+export PATH="/usr/local/opt/openssl/bin:$PATH"
 
-# check if ctf-tools is installed and add the installer to path
-if [ -d "$HOME/tools/installers/ctf-tools" ]; then
-  export PATH=$PATH:$HOME/installers/ctf-tools/bin
-fi
+alias localports='sudo lsof -PiTCP -sTCP:LISTEN'
+
+#enrich current terminal window with AWS credentials
+alias enrichAWS="echo 'Touch key' && gpg -d ~/.aws/env.gpg | source /dev/stdin"
+
+# Docker specific
+alias dockerstart="osascript -e 'tell app \"Docker\" to activate'"
+alias dockerstop="osascript -e 'quit app \"Docker\"'"
+alias dockershell='docker run --rm -i -t --entrypoint=/bin/bash' 
+alias dockershellsh='docker run --rm -i -t --entrypoint=/bin/sh'
+alias dockershellpersistent="docker run -i -t --entrypoint=/bin/bash -v '/Users/poppy/.dockershared':'/data/'"
+alias nginxhere='docker run --rm -it -p 80:80 -p 443:443 -v "${PWD}:/srv/data" rflathers/nginxserve'  
+alias uploadhere='docker run -p 25478:25478 -v $HOME/tmp:/var/root mayth/simple-upload-server app -token f9403fc5f537b4ab332d /var/root'
+alias uploadhere='docker run --rm -it -p80:3000 -v "${PWD}:/data" rflathers/postfiledump' 
+alias metasploit='docker run --rm -it -v "${HOME}/.msf4:/home/msf/.msf4" metasploitframework/metasploit-framework ./msfconsole'
+alias metasploitports='docker run --rm -it -v "${HOME}/.msf4:/home/msf/.msf4" -p 4444:4444 -p 8443-8500:8443-8500 metasploitframework/metasploit-framework ./msfconsole'
+alias mobsecurity='docker run --rm -it -p 8000:8000 opensecurity/mobile-security-framework-mobsf:latest'
+alias torproxy='docker run --rm -it -p 127.0.0.1:9150:9150  peterdavehello/tor-socks-proxy:latest'
+alias domainhunter='docker run --rm -it domainhunter'
+alias rpcclient='docker run --rm -it --entrypoint=/bin/bash dperson/samba'
+alias gitleaks='docker run --rm zricethezav/gitleaks -v'
+alias reqdump='docker run --rm -it -p 80:3000 rflathers/reqdump' 
+alias impacket="docker run --rm -v '/Users/poppy/.impacket/':'/opt/impacket/examples' -it rflathers/impacket"
+alias impacketenv="docker run --rm -v '/Users/poppy/.impacket/':'/opt/impacket/examples' -e KRB5CCNAME=/opt/carl.ccache -it rflathers/impacket"
+
+alias jamjarenv="docker run  -i -t --entrypoint=/bin/bash -v '/Users/poppy/Documents/JamJar/:/jamjar'"
+
+alias dockernginx="docker run --rm -i -t --entrypoint=/bin/bash -p 80:80 -p 443:443"
+
+alias dfimage="docker run --rm -v /var/run/docker.sock:/var/run/docker.sock centurylink/dockerfile-from-image"
+
+# Docker functions
+function dockerconnect { docker exec -it $1 bash; }
+function dockerconnectsh { docker exec -it $1 sh; }
+
+function mysqlclient {
+  if [ "$#" -ne 2 ]; then
+    echo "mysqlclient <host> <username>"
+    return
+  fi
+  docker run -it arey/mysql-client -h $1 -u $2 -p;
+}
+
+function org { sort | uniq -c | sort -n }
+
+export HISTFILE=~/.zsh_history
+export HISTSIZE=999999999
+setopt EXTENDED_HISTORY
+export SAVEHIST=$HISTSIZE
+
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# begin forge completion
+#. <(forge --completion)
+# end forge completion
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
