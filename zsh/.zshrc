@@ -3,7 +3,7 @@ export ZSH=~/.oh-my-zsh
 
 ZSH_THEME="eastwood"
 
-plugins=(git vagrant docker)
+plugins=(git vagrant docker z fzf)
 
 
 # User configuration
@@ -36,6 +36,13 @@ if [ -f '/Users/poppy/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/poppy/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/poppy/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
+alias cat="batcat"
+alias catp="batcat -p"
+alias space="ncdu"
+alias pbcopy="xclip -sel clip"
+alias pbpaste="xclip -o -sel clip"
+
+
 #alias android='/Users/poppy/Library/Android/sdk/emulator/emulator'
 export PATH="/usr/local/opt/openssl/bin:$PATH"
 
@@ -43,6 +50,29 @@ alias localports='sudo lsof -PiTCP -sTCP:LISTEN'
 
 #enrich current terminal window with AWS credentials
 alias enrichAWS="echo 'Touch key' && gpg -d ~/.aws/env.gpg | source /dev/stdin"
+
+# add pip local user stuff to path
+export PATH="/home/skittles/.local/bin":$PATH
+
+# System stats
+alias temps="watch -n 1 sensors"
+alias gtemps="watch -n 1 nvidia-smi"
+alias syst="inxi -b"
+alias cpugraph="s-tui"
+alias windirstat="baobab"
+
+# provides alias to view current steam background shader logs
+alias shaderlogs="tail -f ~/.steam/root/logs/shader_log.txt"
+
+## vscode
+#alias code="/var/lib/flatpak/app/com.visualstudio.code/x86_64/stable/8036dd3058a666867c0fe112370049638971d1f4060946b1fea5b3327cec1f7e/files/extra/vscode/bin/code"
+
+# Cuda NVCC gcc for gpu
+export PATH=$PATH:/usr/local/cuda-12.4/bin/
+
+# Discord process finished notify webhook
+# usage: <command> && notify
+alias notify='curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST --data "{\"content\": \"Process finished\"}" https://discord.com/api/webhooks/1257984703361847377/KfiNhXZMvoXhwlgSvsRthoM-R84gncrbmyUukzFPefE6Kcx9XaRziOPKw6-w6DLXsOUU  -s -o nul'
 
 # Docker specific
 alias dockerstart="osascript -e 'tell app \"Docker\" to activate'"
@@ -97,3 +127,8 @@ export SAVEHIST=$HISTSIZE
 #. <(forge --completion)
 # end forge completion
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+export PROMPT='$FG[008][%M]$(git_custom_status)%{$fg[cyan]%}[%~% ]%{$reset_color%}%B$%b '
+
+# protontricks
+#alias protontricks='flatpak run /home/skittles/.var/app/com.github.Matoking.protontricks/cache/protontricks'
+#alias protontricks-launch='flatpak run --command=protontricks-launch /home/skittles/.var/app/com.github.Matoking.protontricks/cache/protontricks'
