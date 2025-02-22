@@ -3,7 +3,10 @@
 # - zoxide: brew install zoxide; apt install zoxide
 
 # Add homebrew apps to path
-eval "$(/opt/homebrew/bin/brew shellenv)"
+case `uname` in 
+	Darwin)
+		eval "$(/opt/homebrew/bin/brew shellenv)"
+esac
 # Disable brew auto update
 # export HOMEBREW_NO_AUTO_UPDATE=1
 
@@ -45,18 +48,10 @@ fi
 bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
-
-# History
-HISTSIZE=50000
-HSITFILE=~/.zsh_history
-SAVEHIST=$HISTSIZE
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-#setopt hist_ignore_all_dups
-#setopt hist_save_no_dups
-#setopt hist_ignore_dups
-#setopt hist_find_no_dups
+bindkey '^[[A' history-search-backward
+bindkey '^[OA' history-search-backward
+bindkey '^[[B' history-search-forward
+bindkey '^[OB' history-search-forward
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -139,7 +134,7 @@ function tre() {
 }
 
 # Shell integrations
-eval "$(fzf --zsh)"
+#eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
 # Environment exports
@@ -148,3 +143,15 @@ export EDITOR='vim'
 export MANPAGER='less -X'
 # Highlight section titles in manual pages.
 export LESS_TERMCAP_md="${yellow}";
+
+# History
+HISTSIZE=50000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+#setopt hist_ignore_all_dups
+#setopt hist_save_no_dups
+#setopt hist_ignore_dups
+#setopt hist_find_no_dups
